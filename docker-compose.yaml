@@ -15,4 +15,4 @@ services:
       - "8000:8000"
     depends_on:
       - redis-server
-    command: bash -c "python main.py"
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000"

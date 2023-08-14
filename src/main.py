@@ -21,14 +21,14 @@ async def root():
     return {'swagger': 'http://127.0.0.1:8000/docs'}
 
 
-@app.get('api/v1/users/get')
+@app.get('/api/v1/users/get')
 async def get_users():
     r_client = await get_redis()
     all_cache_users = await r_client.get_users()
     return JSONResponse(content=all_cache_users, status_code=status.HTTP_200_OK)
 
 
-@app.post('api/v1/users/set')
+@app.post('/api/v1/users/set')
 async def set_users(request: Request, user: UserSchema):
     r_client = await get_redis()
     user_data = {str(user.UUID): 0}
@@ -37,7 +37,7 @@ async def set_users(request: Request, user: UserSchema):
     return JSONResponse(content=user_data, status_code=status.HTTP_201_CREATED)
 
 
-@app.post('api/v1/lottery')
+@app.post('/api/v1/lottery')
 async def play(request: Request, user: UserSchema):
     r_client = await get_redis()
     user_id = str(user.UUID)
