@@ -1,1 +1,1 @@
-0 0 * * * /usr/bin/python /app/src/script.py
+0 0 * * * usr/local/bin/python /app/src/script.py
