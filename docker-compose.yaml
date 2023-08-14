@@ -11,6 +11,8 @@ services:
     build: 
       context: .
       dockerfile: app.Dockerfile
+    environment:
+        - REDIS_HOST=redis-server
     ports:
       - "8000:8000"
     depends_on:

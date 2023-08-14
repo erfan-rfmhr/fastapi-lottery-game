@@ -4,16 +4,11 @@ from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
-from redis_connection import RedisConnection
+from db.get_db import get_redis
 from schema.user import UserSchema
 from utils.lottery import perform_lottery
 
 app = FastAPI()
-
-
-async def get_redis():
-    r_session = RedisConnection(host='192.168.163.131')
-    return r_session
 
 
 @app.get('/')
@@ -23,14 +18,14 @@ async def root():
 
 @app.get('/api/v1/users/get')
 async def get_users():
-    r_client = await get_redis()
+    r_client = get_redis()
     all_cache_users = await r_client.get_users()
     return JSONResponse(content=all_cache_users, status_code=status.HTTP_200_OK)
 
 
 @app.post('/api/v1/users/set')
 async def set_users(request: Request, user: UserSchema):
-    r_client = await get_redis()
+    r_client = get_redis()
     user_data = {str(user.UUID): 0}
     await r_client.set_user(user_data)
 
@@ -39,7 +34,7 @@ async def set_users(request: Request, user: UserSchema):
 
 @app.post('/api/v1/lottery')
 async def play(request: Request, user: UserSchema):
-    r_client = await get_redis()
+    r_client = get_redis()
     user_id = str(user.UUID)
     play_count = await r_client.get_user_play_count(user_id=user_id)
     if play_count == 3:

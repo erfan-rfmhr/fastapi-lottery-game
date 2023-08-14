@@ -26,12 +26,13 @@ class RedisConnection:
     async def set_user(self, users: dict) -> None:
         for key, value in users.items():
             self._client.set(key, value)
-            self._client.expire(key, time=24*3600)
 
     async def increase_user_play_count(self, user_id) -> None:
         play_count = int(self._client.get(user_id))
         self._client.set(user_id, play_count + 1)
-        self._client.expire(user_id, time=24*3600)
+
+    async def reset_user_play_count(self, user_id) -> None:
+        self._client.set(user_id, 0)
 
     def __del__(self):
         self._client.close()
